@@ -25,3 +25,7 @@ Resume_Ai_agent/
 │
 └── README.md
 
+<img width="1920" height="1080" alt="Screenshot (619)" src="https://github.com/user-attachments/assets/f566e366-47fd-4da4-9ed5-457fac97480b" />
+
+
+<img width="1920" height="1080" alt="Screenshot (618)" src="https://github.com/user-attachments/assets/7e610ff1-e121-4a23-8cdf-fbc7fc335f9c" />
