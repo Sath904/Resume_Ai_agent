@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Interview Coach</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Body & Fonts */
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Container */
+    .container {
+      background: #ffffffcc;
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      padding: 40px;
+      width: 90%;
+      max-width: 900px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Doodles */
+    .doodle {
+      position: absolute;
+      width: 150px;
+      opacity: 0.2;
+    }
+    .doodle1 { top: -20px; left: -20px; transform: rotate(25deg); }
+    .doodle2 { bottom: -30px; right: -30px; transform: rotate(-15deg); }
+
+    /* Heading */
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      color: #00796b;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.2rem;
+    }
+
+    /* Labels & Inputs */
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #004d40;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border-radius: 10px;
+      border: 1px solid #b2dfdb;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #00796b;
+      box-shadow: 0 0 8px rgba(0,121,107,0.3);
+    }
+
+    /* Button */
+    button {
+      margin-top: 20px;
+      padding: 14px 28px;
+      font-size: 1.1rem;
+      color: white;
+      background: linear-gradient(135deg, #00796b, #004d40);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: block;
+      width: 100%;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    }
+
+    /* Response Box */
+    #response {
+      margin-top: 25px;
+      white-space: pre-wrap;
+      background: #e0f2f1;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+      max-height: 400px;
+      overflow-y: auto;
+      font-size: 0.95rem;
+      color: #004d40;
+    }
+
+    /* Scrollbar */
+    #response::-webkit-scrollbar {
+      width: 8px;
+    }
+    #response::-webkit-scrollbar-thumb {
+      background: #00796b;
+      border-radius: 10px;
+    }
+
+    #response::-webkit-scrollbar-track {
+      background: #b2dfdb;
+      border-radius: 10px;
+    }
+
+    @media(max-width:600px){
+      h1 { font-size: 1.6rem; }
+      button { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Doodles -->
+    <img src="https://img.icons8.com/ios/100/000000/cloud.png" class="doodle doodle1"/>
+    <img src="https://img.icons8.com/ios/100/000000/gear.png" class="doodle doodle2"/>
+
+    <h1>AI Interview Coach</h1>
+
+    <label for="resume">Resume Text:</label>
+    <textarea id="resume" rows="6" placeholder="Paste your resume here..."></textarea>
+
+    <label for="role">Job Role:</label>
+    <input type="text" id="role" placeholder="Enter job role, e.g., Data Analyst">
+
+    <button onclick="runInterview()">Start Interview</button>
+
+    <div id="response"></div>
+  </div>
+
+  <script>
+    async function runInterview() {
+      const resume = document.getElementById('resume').value;
+      const role = document.getElementById('role').value;
+
+      if (!resume || !role) {
+        alert("Please fill both Resume and Role fields!");
+        return;
+      }
+
+      document.getElementById('response').innerText = "Waiting for AI response...";
+
+      try {
+        const res = await fetch('http://127.0.0.1:8002/interview', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ resume_text: resume, role: role })
+        });
+
+        if (!res.ok) throw new Error(`Server error: ${res.status}`);
+
+        const data = await res.json();
+        document.getElementById('response').innerText = data.response;
+      } catch (err) {
+        document.getElementById('response').innerText = `Error: ${err.message}`;
+      }
+    }
+  </script>
+</body>
+</html>
